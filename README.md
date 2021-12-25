@@ -43,7 +43,8 @@ In another project:
 
 ```java
 		DataPerson data = new DataPerson(pathSolutionFile, 
-							pathInput,
+							pathInputFolder,
+							fileInputName, // or only ""
 							pathOutput);
 
 		Submeter submeter = new Submeter(data);
