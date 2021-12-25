@@ -9,22 +9,22 @@ Note: This project is in an early version, although it works, there may be a bet
 Download [.jar](https://github.com/jlucasss/JSubmeter/releases/tag/v0.0.1) file and run in terminal:
 
 ```bash
-> java -jar 'JSubmeter.jar'
+> java -jar jsubmeter-0.0.1.jar
 
-JSubmeter v0.01
+JSubmeter v0.0.1
 
-java -jar 'JSubmeter.jar' <OutputPath> <SolutionPath> <InputPath> [options]
- <OutputPath>: Path used to create temporary files and output(Ex:. 'C://').
- <SolutionPath>: Path of the .java file(Ex:. 'C://Main.java').
- <InputPath>: Path of the file containing the input(Ex:. 'C://input.txt').
+java -jar 'JSubmeter.jar' <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]
+ <SolutionFile>: Path of the .java file(Ex:. 'C://Main.java').
+ <InputFolder>: Path of the file containing the input(Ex:. 'C://input.txt').
+ <InputFileName>: File name with extension(if contains) of input(Ex:. 'input.txt').
+ <OutputFolder>: Path used to create temporary files and output(Ex:. 'C://').
  [options]: working specifications.
 
 Can be [options]:
  --maintainTemporaries: do not delete files created for compilation and execution.
- --noSaveRuntime: do not save the runtime on output.
+ --noSaveRuntime: don't save the runtime on output.
  --noSaveOutput: do not save console output.
-Note: If all '--noSave...' arguments are used, nothing will be saved.
-
+Note: If all "--noSave..." arguments are used, nothing will be saved.
 ```
 
 or like libary in your project.
