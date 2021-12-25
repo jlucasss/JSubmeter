@@ -34,9 +34,8 @@ or like libary in your project.
 At the terminal:
 
 ```bash
-JSubmeter v0.01
 
-java -jar 'JSubmit.jar' "C:/output/" "C:/Solution.java" "C:/input.txt" 
+java -jar jsubmeter-0.0.1.jar "C:/output/" "C:/Solution.java" "C:/input.txt" 
 
 ```
 
