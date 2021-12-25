@@ -57,7 +57,7 @@ public class Library {
 		
 		if (argsLength < 4) {
 
-			System.out.println("java -jar 'JSubmeter.jar' <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]");
+			System.out.println("java -jar jsubmeter-0.0.1.jar <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]");
 			System.out.println(" <SolutionFile>: Path of the .java file(Ex:. 'C://Main.java').");
 			System.out.println(" <InputFolder>: Path of the file containing the input(Ex:. 'C://input.txt').");
 			System.out.println(" <InputFileName>: File name with extension(if contains) of input(Ex:. 'input.txt').");
