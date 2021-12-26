@@ -1,6 +1,6 @@
 # JSubmeter
 
-JSubmeter is a simple libary that tests a solution class for a given file with text input.
+JSubmeter is a simple library that tests a solution class for a given file with text input.
 
 Note: This project is in an early version, although it works, there may be a better way to do it.
 
