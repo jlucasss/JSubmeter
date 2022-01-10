@@ -35,7 +35,7 @@ At the terminal:
 
 ```bash
 
-java -jar jsubmeter-0.0.1.jar "C:/output/" "C:/Solution.java" "C:/input.txt" 
+java -jar jsubmeter-0.0.1.jar "C:/Solution.java" "C:/" "input.txt" "C:/output/" 
 
 ```
 
