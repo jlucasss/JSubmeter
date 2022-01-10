@@ -62,7 +62,7 @@ public class AbstractExecutionTest {
 	@Test
 	void measuresSimpleExecution() {
 
-		abstractExecution.execute(new String[]{"5"});
+		abstractExecution.prepareAndExecute(new String[]{"5"});
 
 		long tc = abstractExecution.getTimeCompilation(),
 			te = abstractExecution.getTimeExecution();
@@ -83,7 +83,7 @@ public class AbstractExecutionTest {
 
 		for (int i = 0; numExecutions > i; i++) { 
 
-			abstractExecution.execute(new String[] {"5"});
+			abstractExecution.prepareAndExecute(new String[] {"5"});
 
 			grupo[j] = abstractExecution.getTimeCompilation();
 			grupo[j++] = abstractExecution.getTimeExecution();

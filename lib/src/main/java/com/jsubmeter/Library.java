@@ -13,6 +13,8 @@ import com.jsubmeter.models.DataPerson;
 
 public class Library {
 
+	public static final String VERSION = "0.0.2";
+
 	public static void main(String[] args) {
 
 		defaultMessage(args.length);
@@ -32,7 +34,7 @@ public class Library {
 		Submeter submeter = new Submeter(data);
 
 		if (args.length > 4)
-			for (int i = 0; args.length > i; i++)
+			for (int i = 4; args.length > i; i++)
 				switchArgs(args[i], submeter);
 
 		try {
@@ -53,20 +55,21 @@ public class Library {
 
 	private static void defaultMessage(int argsLength) {
 		
-		System.out.println("JSubmeter v0.0.1\n");	
+		System.out.println("JSubmeter v" + VERSION + "\n");	
 		
 		if (argsLength < 4) {
 
-			System.out.println("java -jar jsubmeter-0.0.1.jar <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]");
+			System.out.println("java -jar jsubmeter-" + VERSION + ".jar <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]");
 			System.out.println(" <SolutionFile>: Path of the .java file(Ex:. 'C://Main.java').");
 			System.out.println(" <InputFolder>: Path of the file containing the input(Ex:. 'C://input.txt').");
 			System.out.println(" <InputFileName>: File name with extension(if contains) of input(Ex:. 'input.txt').");
 			System.out.println(" <OutputFolder>: Path used to create temporary files and output(Ex:. 'C://').");
 			System.out.println(" [options]: working specifications.");
 			System.out.println("\nCan be [options]:");
-			System.out.println(" --maintainTemporaries: do not delete files created for compilation and execution.");
-			System.out.println(" --noSaveRuntime: don't save the runtime on output.");
-			System.out.println(" --noSaveOutput: do not save console output.");
+			System.out.println(" --maintainTemporaries: do not delete files created for compilation and execution.[default: true]");
+			System.out.println(" --noSaveRuntime: don't save the runtime on output.[default: true]");
+			System.out.println(" --noSaveOutput: do not save console output.[default: true]");
+			System.out.println(" --printNewSourceCode: prints new source code (if the current one has been modified).[default: false]");
 			System.out.println("Note: If all \"--noSave...\" arguments are used, nothing will be saved.\n");
 			System.exit(0);
 		}
@@ -75,7 +78,7 @@ public class Library {
 
 	private static void switchArgs(String arg, Submeter submeter) {
 
-		switch (arg) {
+		switch (arg.trim()) {
 
 			case "--maintainTemporaries":
 			submeter.setDeleteTemporary(true);
@@ -89,8 +92,12 @@ public class Library {
 			submeter.setFileOutputWithOutput(false);
 			break;
 
+			case "--printNewSourceCode":
+			submeter.setPrintNewSourceCode(true);
+			break;
+
 			default:
-				System.out.println("Argument does not exist.");
+				System.out.println("Argument \"" + arg + "\" does not exist.");
 				System.exit(0);
 			break;
 		}

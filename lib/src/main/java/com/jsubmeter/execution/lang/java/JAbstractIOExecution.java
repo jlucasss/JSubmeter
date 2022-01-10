@@ -53,14 +53,14 @@ public abstract class JAbstractIOExecution extends AbstractExecution {
 
 			// Create new class
 			List<String> sourceCode = new Reader(data.getPathSolutionFile()).readLines();
-			List<String> newSourceCode = createNewSourceCode(sourceCode);
+			this.setNewSourceCode(createNewSourceCode(sourceCode));
 
-			newSourceCode.forEach(txt -> System.out.println(txt));
+			// this.newSourceCode.forEach(txt -> System.out.println(txt));
 
 			//Path new class
 			String newClassPath = data.getPathOutputFolder() + this.className;
 
-			new Writer(newClassPath).writeLines(newSourceCode);
+			new Writer(newClassPath).writeLines(this.getNewSourceCode());
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();

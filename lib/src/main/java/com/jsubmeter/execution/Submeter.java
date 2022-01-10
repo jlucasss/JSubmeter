@@ -24,7 +24,8 @@ public class Submeter {
 	private String name;
 	private boolean deleteTemporary,
 				fileOutputWithTimeExecution,
-				fileOutputWithOutput;
+				fileOutputWithOutput,
+				printNewSourceCode;
 
 	public Submeter(DataPerson person) {
 		
@@ -32,6 +33,7 @@ public class Submeter {
 		this.deleteTemporary = true;
 		this.fileOutputWithTimeExecution = true;
 		this.fileOutputWithOutput = true;
+		this.printNewSourceCode = false;
 
 	}
 
@@ -43,7 +45,11 @@ public class Submeter {
 
 		AbstractExecution execution = defineClassExecution(this.name);
 
-		execution.execute(null);
+		execution.prepareAndExecute(null);
+
+		if (isPrintNewSourceCode())
+			execution.getNewSourceCode().forEach(txt -> System.out.println(txt));
+
 
 		person.setListOutput(execution.getListOutput());
 
@@ -64,6 +70,11 @@ public class Submeter {
 		this.name = solution.getName();
 
 		preExecution = defineClassExecution(this.name);
+
+		preExecution.prepareAndCompile();
+
+		if (isPrintNewSourceCode())
+			preExecution.getNewSourceCode().forEach(txt -> System.out.println(txt));
 
 	}
 
@@ -154,6 +165,10 @@ public class Submeter {
 		this.fileOutputWithOutput = fileOutputWithOutput;
 	}
 
+	public void setPrintNewSourceCode(boolean printNewSourceCode) {
+		this.printNewSourceCode = printNewSourceCode;
+	}
+
 	public boolean isDeleteTemporary() {
 		return this.deleteTemporary;
 	}
@@ -164,6 +179,10 @@ public class Submeter {
 
 	public boolean isFileOutputWithOutput() {
 		return this.fileOutputWithOutput;
+	}
+
+	public boolean isPrintNewSourceCode() {
+		return this.printNewSourceCode;
 	}
 
 }

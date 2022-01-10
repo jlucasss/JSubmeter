@@ -2,6 +2,7 @@
 package com.jsubmeter.execution;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.jsubmeter.models.DataPerson;
 
@@ -18,10 +19,11 @@ public abstract class AbstractExecution {
 
 	protected DataPerson data;
 	private long timeCompilation, timeExecution;
-	private List<String> listOutput;
+	private List<String> listOutput, newSourceCode;
 	
 	public AbstractExecution(DataPerson data) {
 		this.data = data;
+		this.newSourceCode = new ArrayList<String>();
 	}
 
 	protected abstract boolean compile();
@@ -31,7 +33,7 @@ public abstract class AbstractExecution {
 	public abstract void deleteCreatedFiles();
 	protected abstract void error();
 
-	public void execute(String[] args) {
+	public boolean prepareAndCompile() {
 
 		prepareCompilation();
 
@@ -41,18 +43,29 @@ public abstract class AbstractExecution {
 
 		timeCompilation = System.nanoTime() - timeCompilation;//final time - start time
 
-		if (compiled) {
-
-			prepareExecution();
-
-			timeExecution = System.nanoTime();
-
-			run(args);
-
-			timeExecution = System.nanoTime() - timeExecution;
-
-		} else
+		if (!compiled)
 			error();
+
+		return compiled;
+
+	}
+
+	public void execute(String[] args) {
+
+		prepareExecution();
+
+		timeExecution = System.nanoTime();
+
+		run(args);
+
+		timeExecution = System.nanoTime() - timeExecution;
+
+	}
+
+	public void prepareAndExecute(String[] args) {
+
+		if (prepareAndCompile())
+			execute(args);
 
 	}
 
@@ -70,6 +83,14 @@ public abstract class AbstractExecution {
 
 	protected void setListOutput(List<String> listOutput) {
 		this.listOutput = listOutput;
+	}
+
+	public List<String> getNewSourceCode() {
+		return this.newSourceCode;
+	}
+
+	protected void setNewSourceCode(List<String> newSourceCode) {
+		this.newSourceCode = newSourceCode;
 	}
 
 }
