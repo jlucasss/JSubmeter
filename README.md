@@ -6,14 +6,14 @@ Note: This project is in an early version, although it works, there may be a bet
 
 ## Installation
 
-Download [.jar](https://github.com/jlucasss/JSubmeter/releases/tag/v0.0.2) file and run in terminal:
+Download [.jar](https://github.com/jlucasss/JSubmeter/releases/tag/v0.0.3) file and run in terminal:
 
 ```bash
-> java -jar jsubmeter-0.0.2.jar
+> java -jar jsubmeter-0.0.3.jar
 
-JSubmeter v0.0.2
+JSubmeter v0.0.3
 
-java -jar jsubmeter-0.0.2.jar <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]
+java -jar jsubmeter-0.0.3.jar <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]
  <SolutionFile>: Path of the .java file(Ex:. 'C://Main.java').
  <InputFolder>: Path of the file containing the input(Ex:. 'C://input.txt').
  <InputFileName>: File name with extension(if contains) of input(Ex:. 'input.txt').
@@ -36,7 +36,7 @@ At the terminal:
 
 ```bash
 
-java -jar jsubmeter-0.0.2.jar "C:/Solution.java" "C:/" "input.txt" "C:/output/" 
+java -jar jsubmeter-0.0.3.jar "C:/Solution.java" "C:/" "input.txt" "C:/output/" 
 
 ```
 
