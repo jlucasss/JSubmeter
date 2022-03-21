@@ -22,7 +22,7 @@ java -jar jsubmeter-0.0.3.jar <SolutionFile> <InputFolder> <InputFileName> <Outp
 
 Can be [options]:
  --maintainTemporaries: do not delete files created for compilation and execution.[default: true]
- --noSaveRuntime: don't save the runtime on output.[default: true]
+ --noSaveRuntime: do not save the runtime on output.[default: true]
  --noSaveOutput: do not save console output.[default: true]
  --printNewSourceCode: prints new source code (if the current one has been modified).[default: false]
 Note: If all "--noSave..." arguments are used, nothing will be saved.
