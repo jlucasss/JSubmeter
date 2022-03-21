@@ -1,0 +1,27 @@
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+
+import java.util.Scanner;
+
+public class Example4 {
+	public static void main(String[] args) throws Exception
+	{
+		
+		String[] received = new String[2];
+
+		Scanner in = new Scanner(System.in);
+
+		int i = 0;
+		while (in.hasNextLine())
+			received[i++] = in.nextLine();
+
+		BufferedWriter output = new BufferedWriter(
+			new OutputStreamWriter(System.out));
+
+		for (int j = 0; j < received.length; j++) {
+			output.write(received[j] + "\n");
+		}
+
+		output.flush();
+	}
+}

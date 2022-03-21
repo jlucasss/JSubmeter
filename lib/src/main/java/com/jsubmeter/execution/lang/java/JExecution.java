@@ -10,6 +10,7 @@ import javax.tools.ToolProvider;
 
 import com.jsubmeter.models.DataPerson;
 import com.jsubmeter.util.ManipulatorObject;
+import com.jsubmeter.io.reader.Reader;
 
 public class JExecution extends JAbstractIOExecution {
 
@@ -60,18 +61,30 @@ public class JExecution extends JAbstractIOExecution {
 		
 		try {
 
-			List<String> out = (ArrayList<String>) ManipulatorObject.convertObjectToList(
-					method.invoke(this.newInstance, new Object[] { args } )
-			);
-			
-			this.setListOutput(out);
+			//List<String> out = (ArrayList<String>) ManipulatorObject.convertObjectToList(
+					method.invoke(this.newInstance, new Object[]{(this.parameters[0] + args[0]), this.parameters[1]}/*new Object[] { args }*/ );
+			//);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
+	@Override
+	protected void afterExecution() {
+
+		try {
+
+			List<String> out = new Reader(this.temporaryOutput).readLines();
+
+			this.setListOutput(out);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}	
 	
 	@Override
 	protected void error() {

@@ -24,6 +24,7 @@ public class AbstractExecutionTest {
 			protected void prepareExecution() {}
 			public void deleteCreatedFiles() {}
 			protected void error() {}
+			protected void afterExecution() {}
 
 			@Override
 			protected boolean compile() {// Simulate compilation

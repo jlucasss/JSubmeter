@@ -1,42 +1,135 @@
 package com.jsubmeter.execution.lang.java;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class JCodeModificator {
 
-	public static String addImports() {
+	private String nameClass, nameMain2, 
+			nameGetFileInput, pathInputFile, pathFolder;
+
+	private List<String> codeOriginal;
+
+	public JCodeModificator(String nameClass, String pathInputFile, String pathFolder, List<String> codeOriginal) {
+
+		this.nameClass = nameClass;
+		this.pathInputFile = pathInputFile;
+		this.pathFolder = pathFolder;
+		this.codeOriginal = codeOriginal;
+		this.nameMain2 = "main2";
+
+	}
+
+	public List<String> newSourceCode() {
+
+		// Inits
+
+		String lineCurrent;
+
+		List<String> array = new ArrayList<>();
+
+		array.add(addImports());
 		
-		StringBuilder imports = new StringBuilder();
+		array.addAll(this.codeOriginal);
+
+		// Remove all comments in code
+		for (int i = 0; array.size() > i; i++) 
+			i = removeComents(array, i);
+
+		// Fors
+
+		for (int i = 0; array.size() > i; i++) {
+
+			lineCurrent = array.get(i);
+			
+			if (lineCurrent.contains("package ")) //Find, if exist, and remove package
+				array.set(i, "");
+			
+			else if (lineCurrent.contains("class " + this.nameClass)) {
+				int point = indexFirstOfArray(array, i, "{");
+
+				String addedMethodMain2 = array.get(point) + createMethodMain2();
+				// init method of input file
+				array.set(point, addedMethodMain2);
+
+				break; // stop for when complete
+
+			}
+
+		}
+
+		return array;
+
+	}
+
+
+	public String addImports() {
 		
-		imports.append("import java.io.FileInputStream;")
-			.append("import java.io.IOException;")
-			.append("import java.util.List;")
-			.append("import java.util.ArrayList;");
+		List<String> imports = new ArrayList<>();
 		
-		return imports.toString();
+		imports.add("import java.io.PrintStream;");
+		imports.add("import java.io.FileOutputStream;");
+		imports.add("import java.io.FileInputStream;");
+		imports.add("import java.io.IOException;");
+
+		removeAllExistingImports(imports);
+
+		String out = "\n";
+
+		for (int i = 0; imports.size() > i; i++)
+			out += imports.get(i) + "\n"; 
+
+		return out; 
 		
 	}
-	
-	/*
-	 * MAIN METHOD, change to a "normal" method and call it in a new method
-	 */
-	public static String createNewMethodToControl() {
+
+	private void removeAllExistingImports(List<String> imports) {
+
+		List<String> importsExisting = new ArrayList<>();
+
+		// Add list imports
+		for (int i = 0; this.codeOriginal.size() > i; i++) {
+
+			if (this.codeOriginal.get(i).contains("import"))
+				addImportsInList(importsExisting, this.codeOriginal.get(i));
+
+			if (this.codeOriginal.get(i).contains("class")) // break when found "class"
+				break;
+
+		}
+
+		// Remove imports existings
+		imports.removeAll(importsExisting);
+
+	}
+
+	private void addImportsInList(List<String> list, String line) {
+
+		String[] imports = line.trim().split(";"); // Check if exist more one import in one line
+
+		for (int i = 0; imports.length > i; i++) // Add one or more imports existing
+			list.add(imports[i] + ";"); // The split remove ";", therefore add again
+
+	}
+
+	public String createMethodMain2() {
 
 		StringBuilder newSourceCode = new StringBuilder();
 		newSourceCode
-			.append("\n//-----------Code 1 for listOutput------------------\n")
-			.append("\n	public static List<String> exitToVerificationIOExec = new ArrayList<>();")
 			.append("\n")
-			.append("\n	public static List<String> makeExecution(String[] args) {")
+			.append("\n	public static PrintStream " + this.nameMain2 + "(String input, String output) {")
+			.append("\n		PrintStream fileOutput = null;")
 			.append("\n		try {")
-			.append("\n			main2(args);")
+			.append("\n			FileInputStream fileInput = new FileInputStream(input);")
+			.append("\n			fileOutput = new PrintStream(new FileOutputStream(output));")
+			.append("\n			System.setIn(fileInput);")
+			.append("\n			System.setOut(fileOutput);")
+			.append("\n			main(null);")
 			.append("\n		} catch (Exception e) {")
 			.append("\n			e.printStackTrace();")
 			.append("\n		}")
-			.append("\n		return exitToVerificationIOExec;")
-			.append("\n	}")
-			.append("\n	public static void main2(String[] args) throws Exception {")
-			.append("\n\n//----------End Code 1 for listOutput--------------\n");
+			.append("\n		return fileOutput;")
+			.append("\n	}");
 
 		return newSourceCode.toString();
 
@@ -45,150 +138,27 @@ public class JCodeModificator {
 	/*
 	 * IN THE METHOD CONTAINING System.in, Put it to read the file with the template
 	 */
-	public static String replaceInputToReader(String pathInputFile, String pathFolder, String originalLine) {
+	public String replaceInputToReader(String originalLine) {
 
-		StringBuilder fileTry = new StringBuilder();
-
-		fileTry
-			.append("\n//----------Code 2 for listOutput-----------------\n")
-			.append("\n		FileInputStream fileInputStreamFI = null;")
-			.append("\n		try{")
-			.append("\n			fileInputStreamFI = new FileInputStream(\"")
-			.append(pathFolder)
-			.append("\" + (args[0] == null ? \"")
-			.append(pathInputFile)
-			.append("\" : args[0]) );")
-			.append("\n		} catch(Exception e) {")
-			.append("\n			e.printStackTrace();")
-			.append("\n		}")
-			.append("\n\n//--------End Code 2 for listOutput-----------------\n\n");
-
-		String out = fileTry.toString() + originalLine.replaceAll("System.in", "fileInputStreamFI");
-		
-		return out;
+		return originalLine.replaceAll("System.in", 
+					(this.nameClass + "." + this.nameGetFileInput + "()") );
 		
 	}
 
-	/*
-	 * All cases of types of print(ln, f and just print)
+	/* 
+	 * Return first occurrence of "str" in array, starting in "init" 
 	 */
-	public static String replaceAllCasesOfPrint(String line) {
+	public int indexFirstOfArray(List<String> list, int init, String str) {
 
-		String newPrintOutput = "";
+		for (int i = init; list.size() > i; i++)
+			if (list.get(i).contains(str))
+				return i;
 
-		if (line.contains("println"))
-			newPrintOutput = line.replaceFirst("System.out.println\\(", "exitToVerificationIOExec.add(\"\" + "); 
-
-		else if (line.contains("printf")) {
-
-			String content = line.trim().substring("System.out.printf(".length());
-
-			content = removePrintfFormat(content) + ");";//str.substring(index);
-
-			newPrintOutput = "exitToVerificationIOExec.add(\"\" + " + content;
-
-		} else if (line.contains("print"))
-			newPrintOutput = line.replaceAll("System.out.print\\(", 
-					"exitToVerificationIOExec.add(\"\" + "); 
-
-		return newPrintOutput;
+		return -1;
 
 	}
 
-	/*
-	 * If you didn't find an empty constructor and it's already on the last line
-	 */
-	public static String createEmptyConstructor(String originalCodeLine, String classNameOnly) {
-
-		StringBuilder code = new StringBuilder();
-
-		code
-			.append("\n//----------Code 3 for Constructor-----------------\n")
-			.append(originalCodeLine)
-			.append("\n	public ")
-			.append(classNameOnly)
-			.append("() {}\n")
-			.append("\n\n//--------End Code 3 for Constructor-----------------\n\n");
-
-		return code.toString();
-		
-	}
-
-	public static String removePrintfFormat(String str) {
-
-		char[] array = str.toCharArray();
-		
-		char mainQuote = array[0];
-		
-		int indexLastMainQuote = -1;
-
-		indexLastMainQuote = findLastMainQuote(array, mainQuote, indexLastMainQuote);
-		
-		return replaceAllReferencesPrintf(str, mainQuote, indexLastMainQuote+1);
-
-	}
-
-	private static String replaceAllReferencesPrintf(String str, char mainQuote, int indexLastMainQuote) {
-		
-		char[] array;
-		
-		String formatPrintf = str.substring(0, indexLastMainQuote);// text: "&s"
-
-		String argsPrintf = str.substring(formatPrintf.length()).trim(); // content: ", name, ...
-		argsPrintf = argsPrintf.substring(1, argsPrintf.length()-2).trim();// Remove first ",", ");" and spaces
-				
-		String[] splitVarArgsPrintf = argsPrintf.split(",");
-
-		int indexReference,
-			countReferences = 0;
-
-		// Replace "&"s by variables
-		for (int i = 0; splitVarArgsPrintf.length > i; i++) {
-			
-			array = formatPrintf.toCharArray();
-			indexReference = formatPrintf.indexOf("&", countReferences);
-			
-			if (indexReference > -1) {
-			
-				if (array[indexReference+1] == '&')
-					continue;
-				
-				// Replace the first "&" as to find
-				formatPrintf = formatPrintf.replaceFirst("&"+(array[indexReference+1]), 
-						(mainQuote + " + " + splitVarArgsPrintf[i].trim() + " + " + mainQuote) );
-				
-				indexReference = i;
-				
-			} else 
-				break;
-			
-		}
-
-		return formatPrintf;
-
-	}
-
-	protected static int findLastMainQuote(char[] array, char mainQuote, int indexLastMainQuote) {
-
-		// Find index of last main quote
-		for (int i = 1; array.length > i; i++)
-			if (array[i] == mainQuote) {
-				
-				if (array[i] == "\\".toCharArray()[0])
-					continue;
-				else {
-		
-					indexLastMainQuote = i;
-					break;
-				
-				}
-				
-			}
-		return indexLastMainQuote;
-
-	}
-
-	public static int removeComents(List<String> array, int i) {
+	public int removeComents(List<String> array, int i) {
 		
 		String lineCurrent = array.get(i);
 		
@@ -245,7 +215,7 @@ public class JCodeModificator {
 		
 	}
 
-	public static boolean checkIfIsIntoAspas(String line, String part) {
+	private boolean checkIfIsIntoAspas(String line, String part) {
 
 		int indexPart = line.indexOf(part);
 
@@ -276,19 +246,19 @@ public class JCodeModificator {
 
 	}
 
-	/*private boolean copyClass(String origin, String destiny) {
 
-		try {
+	/* Getters */
 
-			Files.copy(new File(origin).toPath(), new FileOutputStream(new File(destiny)));
+	public String getNameClass() {
+		return this.nameClass;
+	}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public String getNameMain2() {
+		return this.nameMain2;
+	}
 
-		return true;
+	public String getNameGetFileInput() {
+		return this.nameGetFileInput;
+	}
 
-	}*/
-
-	
 }

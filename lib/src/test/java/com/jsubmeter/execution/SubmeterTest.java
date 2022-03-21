@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.jsubmeter.JTemporary;
+import com.jsubmeter.JTemporary.EnumAction;
 import com.jsubmeter.io.reader.Reader;
 import com.jsubmeter.io.writer.Writer;
 import com.jsubmeter.models.DataPerson;
@@ -34,15 +35,15 @@ class SubmeterTest {
 		String pathSolutionFile = null;
 
 		try {
-			pathSolutionFile = temporary.createExampleFile();
+			pathSolutionFile = temporary.createClassExampleFile(EnumAction.READER, "Example1");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		SubmeterTest.pathOutput = temporary.getPathTemporary() + "/Example.java.txt";
+		SubmeterTest.pathOutput = temporary.getPathTemporary() + "/Example1.java.txt";
 
 		// Create input files
-		
+
 		try {
 		
 			new Writer(temporary.getPathTemporary() + "/input1.in")
@@ -60,7 +61,7 @@ class SubmeterTest {
 		data = new DataPerson(pathSolutionFile,
 							temporary.getPathTemporary(),
 							"/input1.in",
-							temporary.getPathTemporary().toString());
+							temporary.getPathTemporary());
 
 		SubmeterTest.submeter = new Submeter(data);
 
@@ -115,8 +116,6 @@ class SubmeterTest {
 			e.printStackTrace();
 		}
 
-		System.out.println("Output = " + data.getListOutput().toString());
-		
 		Assertions.assertEquals("Hello World! 2", listOutput.get(1));
 		
 	}

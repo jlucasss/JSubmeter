@@ -45,7 +45,7 @@ public class Submeter {
 
 		AbstractExecution execution = defineClassExecution(this.name);
 
-		execution.prepareAndExecute(null);
+		execution.prepareAndExecute(new String[]{person.getFileInputName()});//null);
 
 		if (isPrintNewSourceCode())
 			execution.getNewSourceCode().forEach(txt -> System.out.println(txt));

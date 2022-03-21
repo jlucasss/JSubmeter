@@ -30,6 +30,7 @@ public abstract class AbstractExecution {
 	protected abstract void run(String[] args);
 	protected abstract void prepareCompilation();
 	protected abstract void prepareExecution();
+	protected abstract void afterExecution();
 	public abstract void deleteCreatedFiles();
 	protected abstract void error();
 
@@ -59,6 +60,8 @@ public abstract class AbstractExecution {
 		run(args);
 
 		timeExecution = System.nanoTime() - timeExecution;
+
+		afterExecution();
 
 	}
 
