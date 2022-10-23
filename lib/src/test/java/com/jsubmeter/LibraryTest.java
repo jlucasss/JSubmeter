@@ -129,7 +129,8 @@ public class LibraryTest {
 			new File(pathInput).toString(), // Path Solution file
 			new File(temporary.getPathTemporary()).toString(), // Path folder input file
 			"input.in", // Input file
-			new File(temporary.getPathTemporary()).toString() // Output
+			new File(temporary.getPathTemporary()).toString(), // Output
+			"1000000000" // Maxruntime = 1.000,000,000ns = 1s
 			//,"--printNewSourceCode"
 			//,"--maintainTemporaries"
 		};

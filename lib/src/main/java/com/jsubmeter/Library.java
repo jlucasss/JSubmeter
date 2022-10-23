@@ -13,7 +13,8 @@ import com.jsubmeter.models.DataPerson;
 
 public class Library {
 
-	public static final String VERSION = "0.0.3";
+	public static final String VERSION = "0.0.4";
+	public static final int INIT_OPTIONS = 5;
 
 	public static void main(String[] args) {
 
@@ -22,7 +23,8 @@ public class Library {
 		String pathSolutionFile = args[0],
 				pathInputFolder = args[1],
 				fileInputName = args[2],
-				pathOutput = args[3];
+				pathOutput = args[3],
+				maxRuntime = args[4];
 		
 		pathOutput += "/JSubmeter - Output/";// Create folder inside the place to not overwrite class with the same name
 
@@ -33,8 +35,8 @@ public class Library {
 
 		Submeter submeter = new Submeter(data);
 
-		if (args.length > 4)
-			for (int i = 4; args.length > i; i++)
+		if (args.length > Library.INIT_OPTIONS)
+			for (int i = Library.INIT_OPTIONS; args.length > i; i++)
 				switchArgs(args[i], submeter);
 
 		try {
@@ -57,13 +59,14 @@ public class Library {
 		
 		System.out.println("JSubmeter v" + VERSION + "\n");	
 		
-		if (argsLength < 4) {
+		if (argsLength < Library.INIT_OPTIONS) {
 
-			System.out.println("java -jar jsubmeter-" + VERSION + ".jar <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> [options]");
+			System.out.println("java -jar jsubmeter-" + VERSION + ".jar <SolutionFile> <InputFolder> <InputFileName> <OutputFolder> <MaxRuntime> [options]");
 			System.out.println(" <SolutionFile>: Path of the .java file(Ex:. 'C://Main.java').");
 			System.out.println(" <InputFolder>: Path of the file containing the input(Ex:. 'C://input.txt').");
 			System.out.println(" <InputFileName>: File name with extension(if contains) of input(Ex:. 'input.txt').");
 			System.out.println(" <OutputFolder>: Path used to create temporary files and output(Ex:. 'C://').");
+			System.out.println(" <MaxRuntime>: Maximum runtime of solution file in nanoseconds(Ex:. '1000000000').");
 			System.out.println(" [options]: working specifications.");
 			System.out.println("\nCan be [options]:");
 			System.out.println(" --maintainTemporaries: do not delete files created for compilation and execution.[default: true]");
